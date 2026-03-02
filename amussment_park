@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>  // for formatted output
+
+using namespace std;
+
+// Constants for ticket prices
+const int CHILD_PRICE = 100;
+const int ADULT_PRICE = 150;
+const int SENIOR_PRICE = 250;
+const double DISCOUNT_RATE = 0.10;
+
+// Enum for category
+enum Category { CHILD, ADULT, SENIOR, INVALID };
+
+// Function to classify age
+Category classifyAge(int age) {
+    if (age >= 3 && age <= 15) return CHILD;
+    else if (age >= 16 && age <= 60) return ADULT;
+    else if (age > 60) return SENIOR;
+    else return INVALID;
+}
+
+// Function to get price based on category
+int getPrice(Category cat) {
+    switch (cat) {
+        case CHILD: return CHILD_PRICE;
+        case ADULT: return ADULT_PRICE;
+        case SENIOR: return SENIOR_PRICE;
+        default: return 0;
+    }
+}
+
+// Class to represent a group bill
+class Bill {
+private:
+    int children = 0, adults = 0, seniors = 0;
+    int groupSize;
+
+public:
+    Bill(int size) : groupSize(size) {}
+
+    void addMember(int age) {
+        Category cat = classifyAge(age);
+        switch (cat) {
+            case CHILD: children++; break;
+            case ADULT: adults++; break;
+            case SENIOR: seniors++; break;
+            default: cout << "Invalid age entered. Skipping...\n"; break;
+        }
+    }
+
+    void printSummary() {
+        int totalPrice = (children * CHILD_PRICE) +
+                         (adults * ADULT_PRICE) +
+                         (seniors * SENIOR_PRICE);
+
+        cout << "\n\t*** BILLING SUMMARY ***\n";
+        cout << left << setw(10) << "Children" << ": " << children 
+             << " × ₹" << CHILD_PRICE << " = ₹" << children * CHILD_PRICE << "\n";
+        cout << left << setw(10) << "Adults"   << ": " << adults 
+             << " × ₹" << ADULT_PRICE << " = ₹" << adults * ADULT_PRICE << "\n";
+        cout << left << setw(10) << "Seniors"  << ": " << seniors 
+             << " × ₹" << SENIOR_PRICE << " = ₹" << seniors * SENIOR_PRICE << "\n";
+
+        cout << "\nTotal before discount: ₹" << totalPrice;
+
+        if (groupSize >= 5) {
+            int discount = static_cast<int>(totalPrice * DISCOUNT_RATE);
+            int finalPrice = totalPrice - discount;
+            cout << "\nGroup discount (10%): -₹" << discount;
+            cout << "\nTotal after discount : ₹" << finalPrice << "\n";
+        } else {
+            cout << "\nNo group discount applied.\n";
+        }
+    }
+};
+
+int main() {
+    cout << "\t*** WELCOME TO SUNRISE AMUSEMENT PARK ***\n";
+
+    int groupSize, n, age;
+    cout << "\nEnter the number of people in the group: ";
+    cin >> groupSize;
+
+    cout << "\nAge Classification:";
+    cout << "\n - Age 3 to 15: Children (₹" << CHILD_PRICE << ")";
+    cout << "\n - Age 16 to 60: Adults (₹" << ADULT_PRICE << ")";
+    cout << "\n - Age above 60: Seniors (₹" << SENIOR_PRICE << ")\n";
+
+    cout << "\nEnter the number of members for billing: ";
+    cin >> n;
+
+    Bill bill(groupSize);
+
+    for (int i = 1; i <= n; i++) {
+        cout << "Enter age of member " << i << ": ";
+        cin >> age;
+        bill.addMember(age);
+    }
+
+    bill.printSummary();
+
+    return 0;
+}
