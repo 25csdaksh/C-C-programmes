@@ -1,15 +1,57 @@
-#include<iostrem>
+#include <iostream>
+#include <iomanip>   // for formatted output
 using namespace std;
 
-in main() {
-int length = 10;
-int width = 25;
+// Rectangle class
+class Rectangle {
+private:
+    double length;
+    double width;
 
-int area = length * width;
+public:
+    // Constructor
+    Rectangle(double l, double w) {
+        if (l <= 0 || w <= 0) {
+            throw invalid_argument("Length and width must be positive!");
+        }
+        length = l;
+        width = w;
+    }
 
-cout << "length is : " << length << "\n";
-cout << "width is : " << width << "\n";
-cout << "The area of rectangle is : " << area <<"\n";
+    // Function to calculate area
+    double area() const {
+        return length * width;
+    }
 
-return 0;
+    // Function to calculate perimeter
+    double perimeter() const {
+        return 2 * (length + width);
+    }
+
+    // Display rectangle details
+    void display() const {
+        cout << fixed << setprecision(2);
+        cout << "Length: " << length << " units\n";
+        cout << "Width : " << width << " units\n";
+        cout << "Area  : " << area() << " sq. units\n";
+        cout << "Perimeter: " << perimeter() << " units\n";
+    }
+};
+
+int main() {
+    try {
+        double l, w;
+        cout << "Enter length of rectangle: ";
+        cin >> l;
+        cout << "Enter width of rectangle: ";
+        cin >> w;
+
+        Rectangle rect(l, w);
+        rect.display();
+    }
+    catch (const exception &e) {
+        cerr << "Error: " << e.what() << endl;
+    }
+
+    return 0;
 }
